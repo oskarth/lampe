@@ -285,6 +285,13 @@ theorem loopDone_intro : STHoare p Γ ⟦⟧ (.loop lo lo body) (fun _ => ⟦⟧
   apply Omni.loopDone BitVec.le_refl
   exact SLP.ent_star_top st hp
 
+/-- `loopDone_intro` for any precondition `P` and any exhausted bounds `lo ≥ hi`. -/
+theorem loopDone_intro_of_ge {lo hi : U s} (hle : lo ≥ hi) :
+    STHoare p Γ P (.loop lo hi body) (fun _ => P) := by
+  intro H st hp
+  apply Omni.loopDone hle
+  exact SLP.ent_star_top st hp
+
 theorem loopNext_intro {lo hi : U s}
   : lo < hi →
     STHoare p Γ P (body lo) (fun _ => Q) →
