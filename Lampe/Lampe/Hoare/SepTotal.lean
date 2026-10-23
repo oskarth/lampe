@@ -281,9 +281,9 @@ lemma BitVec.not_lt {a b : BitVec w}: ¬ a < b ↔ b ≤ a := by
   simp [BitVec.le_ofFin, BitVec.lt_ofFin] at *
 
 theorem loopDone_intro : STHoare p Γ ⟦⟧ (.loop lo lo body) (fun _ => ⟦⟧) := by
-  intro _ _ _
-  apply Omni.loopDone
-  apply BitVec.le_refl
+  intro H st hp
+  apply Omni.loopDone BitVec.le_refl
+  exact SLP.ent_star_top st hp
 
 theorem loopNext_intro {lo hi : U s}
   : lo < hi →
