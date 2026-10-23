@@ -1,7 +1,7 @@
 import Lampe
 import Lampe.Crypto.Bn254.Prime
 
-namespace Stage4Bits
+namespace Checks.Bits
 open Lampe
 set_option backward.isDefEq.respectTransparency false
 abbrev p := Crypto.Bn254.prime
@@ -65,4 +65,4 @@ theorem modulus_legacy_run {p Γ st} :
 #print axioms modulus_legacy_run
 #print axioms Builtin.toLeBits
 #print axioms Builtin.modulusLeBits
-end Stage4Bits
+end Checks.Bits

@@ -1,6 +1,6 @@
 import Lampe
 
-namespace Stage4Semantics
+namespace Checks.AsWitness
 open Lampe
 
 theorem asWitness_run {p Γ st} (x : Fp p) :
@@ -52,4 +52,4 @@ theorem other_stubs_empty {p st argTps outTp args Q} :
 #print axioms asWitness_rejects_field_result
 #print axioms asWitness_rejects_integer
 #print axioms other_stubs_empty
-end Stage4Semantics
+end Checks.AsWitness

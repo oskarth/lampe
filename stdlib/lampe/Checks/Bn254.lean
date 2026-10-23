@@ -1,6 +1,6 @@
 import Lampe
 open Lampe Lampe.Crypto Lampe.Crypto.EmbeddedCurve
-namespace Stage3Bn254
+namespace Checks.Bn254
 
 theorem bn254_generator_nonsingular :
     (affineCurve Bn254.prime).Nonsingular 1
@@ -10,4 +10,4 @@ theorem bn254_generator_nonsingular :
 
 #print axioms bn254_generator_nonsingular
 
-end Stage3Bn254
+end Checks.Bn254

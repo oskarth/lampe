@@ -1,7 +1,7 @@
 import «std-1.0.0-beta.21».Extracted
 import Lampe
 
-namespace Stage3Semantics
+namespace Checks.Semantics
 open Lampe
 
 theorem let_value {p Γ st st' tp tp'} {e : Expr (Tp.denote p) tp}
@@ -91,4 +91,4 @@ theorem permutation_nonvacuous {p st} (input : List.Vector (Fp p) 4) :
 #print axioms diagnostic_succeeds
 #print axioms diagnostic_keeps_false_assert_false
 #print axioms asWitness_unsupported_signature
-end Stage3Semantics
+end Checks.Semantics
