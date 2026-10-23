@@ -169,6 +169,9 @@ partial def matchTraitSignature (resolutionGoal : ResolutionGoal) (traitDef : Le
       return none
 
     let implGenerics ← mkFreeHListForList defImplGenericKinds
+    let implGenericsType ← mkAppM ``HList #[mkConst ``Kind.denote, defImplGenericKinds]
+    unless ← isDefEq (← inferType implGenerics) implGenericsType do
+      return none
 
     let traitGenerics := defTraitGenerics.app implGenerics
 
