@@ -5,7 +5,7 @@
     {
       "type": "path",
       "name": "mathlib",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/mathlib",
+      "dir": "../../Lampe/.lake/packages/mathlib",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.lean",
       "inherited": true
@@ -13,7 +13,7 @@
     {
       "type": "path",
       "name": "plausible",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/plausible",
+      "dir": "../../Lampe/.lake/packages/plausible",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -21,7 +21,7 @@
     {
       "type": "path",
       "name": "LeanSearchClient",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/LeanSearchClient",
+      "dir": "../../Lampe/.lake/packages/LeanSearchClient",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -29,7 +29,7 @@
     {
       "type": "path",
       "name": "importGraph",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/importGraph",
+      "dir": "../../Lampe/.lake/packages/importGraph",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -37,7 +37,7 @@
     {
       "type": "path",
       "name": "proofwidgets",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/proofwidgets",
+      "dir": "../../Lampe/.lake/packages/proofwidgets",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.lean",
       "inherited": true
@@ -45,7 +45,7 @@
     {
       "type": "path",
       "name": "aesop",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/aesop",
+      "dir": "../../Lampe/.lake/packages/aesop",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -53,7 +53,7 @@
     {
       "type": "path",
       "name": "Qq",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/Qq",
+      "dir": "../../Lampe/.lake/packages/Qq",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -61,7 +61,7 @@
     {
       "type": "path",
       "name": "batteries",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/batteries",
+      "dir": "../../Lampe/.lake/packages/batteries",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -69,7 +69,7 @@
     {
       "type": "path",
       "name": "Cli",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe/.lake/packages/Cli",
+      "dir": "../../Lampe/.lake/packages/Cli",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.toml",
       "inherited": true
@@ -77,7 +77,7 @@
     {
       "type": "path",
       "name": "Lampe",
-      "dir": "/Users/user/Library/Caches/lean-shielded-pool/work/lampe-port/lampe/Lampe",
+      "dir": "../../Lampe",
       "manifestFile": "lake-manifest.json",
       "configFile": "lakefile.lean",
       "inherited": false

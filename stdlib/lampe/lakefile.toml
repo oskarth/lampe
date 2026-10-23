@@ -2,7 +2,7 @@
 name = "std-1.0.0-beta.21"
 version = "1.0.0-beta.21"
 defaultTargets = ["std-1.0.0-beta.21", "Stdlib"]
-moreLeanArgs = ["--tstack=65536", "-M4096"]
+moreLeanArgs = ["--tstack=65536", "-M8192", "-DElab.async=false"]
 
 [[lean_lib]]
 name = "«std-1.0.0-beta.21»"

@@ -5,7 +5,7 @@ package Lampe where
   leanOptions := #[
     ⟨`pp.unicode.fun, true⟩
   ]
-  moreLeanArgs := #["--tstack=65536", "-M4096"]
+  moreLeanArgs := #["--tstack=65536", "-M4096", "-DElab.async=false"]
   testDriver := "Tests"
 
 require "leanprover-community" / "batteries" @ git "v4.33.1"
