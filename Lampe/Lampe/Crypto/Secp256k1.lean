@@ -33,7 +33,7 @@ def Gx : F :=
 def Gy : F :=
   ((0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8 : Nat) : F)
 
-def G_nonsingular : W.Nonsingular Gx Gy := by native_decide
+def G_nonsingular : W.Nonsingular Gx Gy := by decide
 
 def G : W.Point := WeierstrassCurve.Affine.Point.some (x := Gx) (y := Gy) G_nonsingular
 

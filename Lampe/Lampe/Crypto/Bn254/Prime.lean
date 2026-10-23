@@ -1,6 +1,7 @@
 import Lampe.Crypto.Bn254
 import Mathlib.NumberTheory.LucasPrimality
 import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.ReduceModChar
 
 /-!
 # BN254 scalar-field prime: Pratt certificate and canonical `Lampe.Prime`
@@ -45,14 +46,14 @@ Each `prime_<p>` lemma proves `Nat.Prime <p>` via Mathlib's
   21888242871839275222246405745257275088548364400416034343698204186575808495617  (gen=5, p-1 = 2^28 * (3^2 * (13 * (29 * (983 * (11003 * (237073 * (405928799 * (1670836401704629 * (13818364434197438864469338081))))))))))
 ```
 
-Power conditions are discharged by `native_decide`; small prime
+Power conditions are discharged by `reduce_mod_char <;> decide`; small prime
 factors by `norm_num` (Mathlib's trial-division extension).
 -/
 
 private theorem prime_405928799 : Nat.Prime 405928799 := by
   refine lucas_primality 405928799 (22 : ZMod 405928799) ?_ ?_
   · -- 22^(405928799-1) = 1 mod 405928799
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (405928799 - 1 : ℕ) = 2 * (11 * (3691 * (4999))) := by decide
     rw [h_eq] at hdvd
@@ -63,26 +64,26 @@ private theorem prime_405928799 : Nat.Prime 405928799 := by
     rcases (hq.dvd_mul).mp hdvd with hcase | hrest
     · -- q ∣ 2^1
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hcase]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 11^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h11).mp hcase]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         rcases (hq.dvd_mul).mp hrest with hcase | hrest
         · -- q ∣ 3691^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h3691).mp hcase]
-          native_decide
+          reduce_mod_char <;> decide
         · -- q ∣ rest
           -- hrest : q ∣ 4999^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h4999).mp hrest]
-          native_decide
+          reduce_mod_char <;> decide
 
 private theorem prime_639533339 : Nat.Prime 639533339 := by
   refine lucas_primality 639533339 (2 : ZMod 639533339) ?_ ?_
   · -- 2^(639533339-1) = 1 mod 639533339
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (639533339 - 1 : ℕ) = 2 * (229 * (853 * (1637))) := by decide
     rw [h_eq] at hdvd
@@ -93,26 +94,26 @@ private theorem prime_639533339 : Nat.Prime 639533339 := by
     rcases (hq.dvd_mul).mp hdvd with hcase | hrest
     · -- q ∣ 2^1
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hcase]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 229^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h229).mp hcase]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         rcases (hq.dvd_mul).mp hrest with hcase | hrest
         · -- q ∣ 853^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h853).mp hcase]
-          native_decide
+          reduce_mod_char <;> decide
         · -- q ∣ rest
           -- hrest : q ∣ 1637^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h1637).mp hrest]
-          native_decide
+          reduce_mod_char <;> decide
 
 private theorem prime_12048837557 : Nat.Prime 12048837557 := by
   refine lucas_primality 12048837557 (2 : ZMod 12048837557) ?_ ?_
   · -- 2^(12048837557-1) = 1 mod 12048837557
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (12048837557 - 1 : ℕ) = 2^2 * (7^2 * (661 * (93001))) := by decide
     rw [h_eq] at hdvd
@@ -124,27 +125,27 @@ private theorem prime_12048837557 : Nat.Prime 12048837557 := by
     · -- q ∣ 2^2
       have hdvd_q : q ∣ 2 := hq.dvd_of_dvd_pow hcase
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hdvd_q]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 7^2
         have hdvd_q : q ∣ 7 := hq.dvd_of_dvd_pow hcase
         rw [(Nat.prime_dvd_prime_iff_eq hq h7).mp hdvd_q]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         rcases (hq.dvd_mul).mp hrest with hcase | hrest
         · -- q ∣ 661^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h661).mp hcase]
-          native_decide
+          reduce_mod_char <;> decide
         · -- q ∣ rest
           -- hrest : q ∣ 93001^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h93001).mp hrest]
-          native_decide
+          reduce_mod_char <;> decide
 
 private theorem prime_5156902474397 : Nat.Prime 5156902474397 := by
   refine lucas_primality 5156902474397 (2 : ZMod 5156902474397) ?_ ?_
   · -- 2^(5156902474397-1) = 1 mod 5156902474397
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (5156902474397 - 1 : ℕ) = 2^2 * (107 * (12048837557)) := by decide
     rw [h_eq] at hdvd
@@ -155,21 +156,21 @@ private theorem prime_5156902474397 : Nat.Prime 5156902474397 := by
     · -- q ∣ 2^2
       have hdvd_q : q ∣ 2 := hq.dvd_of_dvd_pow hcase
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hdvd_q]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 107^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h107).mp hcase]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         -- hrest : q ∣ 12048837557^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h12048837557).mp hrest]
-        native_decide
+        reduce_mod_char <;> decide
 
 private theorem prime_1670836401704629 : Nat.Prime 1670836401704629 := by
   refine lucas_primality 1670836401704629 (2 : ZMod 1670836401704629) ?_ ?_
   · -- 2^(1670836401704629-1) = 1 mod 1670836401704629
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (1670836401704629 - 1 : ℕ) = 2^2 * (3^4 * (5156902474397)) := by decide
     rw [h_eq] at hdvd
@@ -180,22 +181,22 @@ private theorem prime_1670836401704629 : Nat.Prime 1670836401704629 := by
     · -- q ∣ 2^2
       have hdvd_q : q ∣ 2 := hq.dvd_of_dvd_pow hcase
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hdvd_q]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 3^4
         have hdvd_q : q ∣ 3 := hq.dvd_of_dvd_pow hcase
         rw [(Nat.prime_dvd_prime_iff_eq hq h3).mp hdvd_q]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         -- hrest : q ∣ 5156902474397^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h5156902474397).mp hrest]
-        native_decide
+        reduce_mod_char <;> decide
 
 private theorem prime_65865678001877903 : Nat.Prime 65865678001877903 := by
   refine lucas_primality 65865678001877903 (5 : ZMod 65865678001877903) ?_ ?_
   · -- 5^(65865678001877903-1) = 1 mod 65865678001877903
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (65865678001877903 - 1 : ℕ) = 2 * (83 * (379 * (1637 * (639533339)))) := by decide
     rw [h_eq] at hdvd
@@ -207,31 +208,31 @@ private theorem prime_65865678001877903 : Nat.Prime 65865678001877903 := by
     rcases (hq.dvd_mul).mp hdvd with hcase | hrest
     · -- q ∣ 2^1
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hcase]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 83^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h83).mp hcase]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         rcases (hq.dvd_mul).mp hrest with hcase | hrest
         · -- q ∣ 379^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h379).mp hcase]
-          native_decide
+          reduce_mod_char <;> decide
         · -- q ∣ rest
           rcases (hq.dvd_mul).mp hrest with hcase | hrest
           · -- q ∣ 1637^1
             rw [(Nat.prime_dvd_prime_iff_eq hq h1637).mp hcase]
-            native_decide
+            reduce_mod_char <;> decide
           · -- q ∣ rest
             -- hrest : q ∣ 639533339^1
             rw [(Nat.prime_dvd_prime_iff_eq hq h639533339).mp hrest]
-            native_decide
+            reduce_mod_char <;> decide
 
 private theorem prime_13818364434197438864469338081 : Nat.Prime 13818364434197438864469338081 := by
   refine lucas_primality 13818364434197438864469338081 (3 : ZMod 13818364434197438864469338081) ?_ ?_
   · -- 3^(13818364434197438864469338081-1) = 1 mod 13818364434197438864469338081
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (13818364434197438864469338081 - 1 : ℕ) = 2^5 * (5 * (823 * (1593227 * (65865678001877903)))) := by decide
     rw [h_eq] at hdvd
@@ -244,31 +245,31 @@ private theorem prime_13818364434197438864469338081 : Nat.Prime 1381836443419743
     · -- q ∣ 2^5
       have hdvd_q : q ∣ 2 := hq.dvd_of_dvd_pow hcase
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hdvd_q]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 5^1
         rw [(Nat.prime_dvd_prime_iff_eq hq h5).mp hcase]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         rcases (hq.dvd_mul).mp hrest with hcase | hrest
         · -- q ∣ 823^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h823).mp hcase]
-          native_decide
+          reduce_mod_char <;> decide
         · -- q ∣ rest
           rcases (hq.dvd_mul).mp hrest with hcase | hrest
           · -- q ∣ 1593227^1
             rw [(Nat.prime_dvd_prime_iff_eq hq h1593227).mp hcase]
-            native_decide
+            reduce_mod_char <;> decide
           · -- q ∣ rest
             -- hrest : q ∣ 65865678001877903^1
             rw [(Nat.prime_dvd_prime_iff_eq hq h65865678001877903).mp hrest]
-            native_decide
+            reduce_mod_char <;> decide
 
 private theorem prime_21888242871839275222246405745257275088548364400416034343698204186575808495617 : Nat.Prime 21888242871839275222246405745257275088548364400416034343698204186575808495617 := by
   refine lucas_primality 21888242871839275222246405745257275088548364400416034343698204186575808495617 (5 : ZMod 21888242871839275222246405745257275088548364400416034343698204186575808495617) ?_ ?_
   · -- 5^(21888242871839275222246405745257275088548364400416034343698204186575808495617-1) = 1 mod 21888242871839275222246405745257275088548364400416034343698204186575808495617
-    native_decide
+    reduce_mod_char <;> decide
   · intro q hq hdvd
     have h_eq : (21888242871839275222246405745257275088548364400416034343698204186575808495617 - 1 : ℕ) = 2^28 * (3^2 * (13 * (29 * (983 * (11003 * (237073 * (405928799 * (1670836401704629 * (13818364434197438864469338081))))))))) := by decide
     rw [h_eq] at hdvd
@@ -286,52 +287,52 @@ private theorem prime_2188824287183927522224640574525727508854836440041603434369
     · -- q ∣ 2^28
       have hdvd_q : q ∣ 2 := hq.dvd_of_dvd_pow hcase
       rw [(Nat.prime_dvd_prime_iff_eq hq h2).mp hdvd_q]
-      native_decide
+      reduce_mod_char <;> decide
     · -- q ∣ rest
       rcases (hq.dvd_mul).mp hrest with hcase | hrest
       · -- q ∣ 3^2
         have hdvd_q : q ∣ 3 := hq.dvd_of_dvd_pow hcase
         rw [(Nat.prime_dvd_prime_iff_eq hq h3).mp hdvd_q]
-        native_decide
+        reduce_mod_char <;> decide
       · -- q ∣ rest
         rcases (hq.dvd_mul).mp hrest with hcase | hrest
         · -- q ∣ 13^1
           rw [(Nat.prime_dvd_prime_iff_eq hq h13).mp hcase]
-          native_decide
+          reduce_mod_char <;> decide
         · -- q ∣ rest
           rcases (hq.dvd_mul).mp hrest with hcase | hrest
           · -- q ∣ 29^1
             rw [(Nat.prime_dvd_prime_iff_eq hq h29).mp hcase]
-            native_decide
+            reduce_mod_char <;> decide
           · -- q ∣ rest
             rcases (hq.dvd_mul).mp hrest with hcase | hrest
             · -- q ∣ 983^1
               rw [(Nat.prime_dvd_prime_iff_eq hq h983).mp hcase]
-              native_decide
+              reduce_mod_char <;> decide
             · -- q ∣ rest
               rcases (hq.dvd_mul).mp hrest with hcase | hrest
               · -- q ∣ 11003^1
                 rw [(Nat.prime_dvd_prime_iff_eq hq h11003).mp hcase]
-                native_decide
+                reduce_mod_char <;> decide
               · -- q ∣ rest
                 rcases (hq.dvd_mul).mp hrest with hcase | hrest
                 · -- q ∣ 237073^1
                   rw [(Nat.prime_dvd_prime_iff_eq hq h237073).mp hcase]
-                  native_decide
+                  reduce_mod_char <;> decide
                 · -- q ∣ rest
                   rcases (hq.dvd_mul).mp hrest with hcase | hrest
                   · -- q ∣ 405928799^1
                     rw [(Nat.prime_dvd_prime_iff_eq hq h405928799).mp hcase]
-                    native_decide
+                    reduce_mod_char <;> decide
                   · -- q ∣ rest
                     rcases (hq.dvd_mul).mp hrest with hcase | hrest
                     · -- q ∣ 1670836401704629^1
                       rw [(Nat.prime_dvd_prime_iff_eq hq h1670836401704629).mp hcase]
-                      native_decide
+                      reduce_mod_char <;> decide
                     · -- q ∣ rest
                       -- hrest : q ∣ 13818364434197438864469338081^1
                       rw [(Nat.prime_dvd_prime_iff_eq hq h13818364434197438864469338081).mp hrest]
-                      native_decide
+                      reduce_mod_char <;> decide
 -- END generated Pratt certificate --
 
 /-- The BN254 scalar-field prime, definitionally `r_scalar`. -/

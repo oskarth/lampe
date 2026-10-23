@@ -103,7 +103,7 @@ def emit_case_split(factors):
         else:
             lines.append(f"{indent}have hdvd_q : q ∣ {q} := hq.dvd_of_dvd_pow {hyp}")
             lines.append(f"{indent}rw [(Nat.prime_dvd_prime_iff_eq hq h{q}).mp hdvd_q]")
-        lines.append(f"{indent}native_decide")
+        lines.append(f"{indent}reduce_mod_char <;> decide")
 
     def recurse(indent, items_, hyp):
         if len(items_) == 1:
@@ -130,7 +130,7 @@ def emit_pratt_node(p, n):
         f"private theorem prime_{p} : Nat.Prime {p} := by",
         f"  refine lucas_primality {p} ({gen} : ZMod {p}) ?_ ?_",
         f"  · -- {gen}^({p}-1) = 1 mod {p}",
-        f"    native_decide",
+        f"    reduce_mod_char <;> decide",
         f"  · intro q hq hdvd",
         f"    have h_eq : ({p} - 1 : ℕ) = {factor_product_str(factors)} := by decide",
         f"    rw [h_eq] at hdvd",
@@ -159,7 +159,7 @@ def generate_body(P) -> str:
         )
     out.append("```")
     out.append("")
-    out.append("Power conditions are discharged by `native_decide`; small prime")
+    out.append("Power conditions are discharged by `reduce_mod_char <;> decide`; small prime")
     out.append("factors by `norm_num` (Mathlib's trial-division extension).")
     out.append("-/")
     out.append("")
