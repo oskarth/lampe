@@ -13,6 +13,8 @@ import Lampe.Builtin.Vector
 import Lampe.Builtin.Str
 import Lampe.Builtin.Struct
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.STHoare
 
 /--
@@ -202,6 +204,7 @@ theorem array_arrayLen_intro : STHoare p Γ ⟦⟧ (.callBuiltin [Tp.array tp N]
     (a := Builtin.ArrayLenCase.array tp N)
   intro h
   simp [Builtin.arrayLenDesc]
+  rfl
 
 theorem vector_arrayLen_intro : STHoare p Γ ⟦⟧ (.callBuiltin [Tp.vector tp] (Tp.u 32) Builtin.arrayLen h![x])
     fun v => ∃∃h, ⟦v = BitVec.ofNatLT x.length h⟧ := by

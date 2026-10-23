@@ -72,7 +72,9 @@ theorem eq_of_iff [LawfulHeap α] {P Q : SLP α} : (P ⊢ Q) → (Q ⊢ P) → P
 
 theorem exists_pure [LawfulHeap α] {P : β → Prop} : (SLP.exists' fun x =>  ⟦P x⟧) = SLP.lift (α := α) (∃x, P x) := by
   unfold SLP.exists' SLP.lift
-  simp
+  funext st
+  apply propext
+  exact exists_and_right
 
 theorem exists_intro_l [LawfulHeap α] {H : β → SLP α} {Q : SLP α}:
   (∀ a, (H a ⊢ Q)) → ((∃∃a, H a) ⊢ Q) := by

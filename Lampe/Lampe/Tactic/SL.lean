@@ -13,7 +13,7 @@ namespace Lampe.SL
 
 namespace Internal
 
-theorem shift_exists_to_mvar [LawfulHeap β] {P R : α → SLP β}
+theorem shift_exists_to_mvar [LawfulHeap β] {Q : SLP β} {P R : α → SLP β}
   : (∀x, (P x ⊢ Q ⋆ R x)) → ((∃∃x, P x) ⊢ Q ⋆ (∃∃x, R x)) := by
   intro
   apply SLP.exists_intro_l

@@ -198,6 +198,7 @@ def derivePedersenGenerators (p : Prime) (domain : List (BitVec 8)) (startIndex 
       pedersenGeneratorPoint p domain (startIndex + i.val) := by
   simp [derivePedersenGenerators, derivePedersenGeneratorsList,
     List.Vector.get, List.get_eq_getElem]
+  rfl
 
 @[simp] theorem derivePedersenGenerators_toList (p : Prime) (domain : List (BitVec 8))
     (startIndex N : Nat) :

@@ -1,5 +1,7 @@
 import Lampe.Builtin.Basic
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Builtin
 
 inductive refOmni : Omni where

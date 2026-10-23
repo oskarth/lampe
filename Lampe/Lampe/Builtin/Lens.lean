@@ -8,6 +8,8 @@ lemma Finmap.insert_mem_disjoint [DecidableEq α] {m₁ m₂ : Finmap fun _ : α
   simp only [Finmap.disjoint_union_left]
   aesop
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Builtin
 
  inductive modifyLensOmni (lens : Lens rep tp₁ tp₂) : Omni where

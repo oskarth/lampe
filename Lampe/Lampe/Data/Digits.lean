@@ -285,24 +285,7 @@ theorem ofDigitsBE_cons' {r : Radix} {d : Nat} {x : Digit r}
 
 theorem ofDigitsBE_lt {r : Radix} {d : Nat} {l : List.Vector (Digit r) d} :
     (ofDigitsBE l).val < r.val ^ d := by
-  induction d with
-  | zero => simp
-  | succ d ih =>
-    cases' l using List.Vector.casesOn with _ x xs
-    rw [ofDigitsBE_cons, Nat.pow_succ]
-    have : r.val - 1 + 1 = r.val := by omega
-    calc
-      _ ≤ (r - 1) * r.val ^ d + ofDigitsBE xs := by
-        rw [
-          add_le_add_iff_right,
-          Nat.mul_le_mul_right_iff (by by_contra; simp_all)
-        ]
-        apply Nat.le_of_lt_succ
-        rw [Nat.succ_eq_add_one, this]
-        exact x.prop
-      _ < (r - 1) * r.val ^ d + r.val ^ d := by simp [*]
-      _ = (↑r - 1) * ↑r ^ d + 1 * ↑r ^ d := by simp
-      _ = _ := by rw [←Nat.add_mul, this, mul_comm]
+  exact (ofDigitsBE l).isLt
 
 theorem ofDigitsBE'_lt {r : Radix} {l : List (Digit r)} :
     ofDigitsBE' l < r ^ l.length := by
@@ -326,12 +309,14 @@ theorem ofDigitsBE'_lt {r : Radix} {l : List (Digit r)} :
 
 theorem ofDigitsBE_toDigitsBE {r : Radix} {n : RadixVec r d} :
     ofDigitsBE (toDigitsBE n) = n := by
+  classical
   induction d with
   | zero =>
-    cases' r with r hr
-    cases' n with n hn
-    have : n = 0 := by simp_all
-    simp [ofDigitsBE, ofLimbsBE, this]
+    apply Fin.ext
+    have h₁ := (ofDigitsBE (toDigitsBE n)).isLt
+    have h₂ := n.isLt
+    simp only [Nat.pow_zero] at h₁ h₂
+    omega
   | succ d ih =>
     conv_rhs => rw [msd_lsds_decomposition (v := n)]
     have := Fin.val_eq_of_eq $ ih (n := n.lsds)
