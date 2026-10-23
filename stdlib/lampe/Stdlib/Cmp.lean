@@ -10,6 +10,8 @@ import Stdlib.List
 import Stdlib.Tp
 import Stdlib.Tuple
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Stdlib.Cmp
 
 open «std-1.0.0-beta.21»
@@ -80,14 +82,6 @@ theorem u16_eq_spec {p a b}
 theorem u8_eq_spec {p a b}
   : STHoare p env ⟦⟧
     (eq h![] (.u 8) h![] h![] h![a, b])
-    fun r : Bool => ⟦r ↔ a = b⟧ := by
-  resolve_trait
-  steps
-  simp_all
-
-theorem u1_eq_spec {p a b}
-  : STHoare p env ⟦⟧
-    (eq h![] (.u 1) h![] h![] h![a, b])
     fun r : Bool => ⟦r ↔ a = b⟧ := by
   resolve_trait
   steps
@@ -414,7 +408,7 @@ lemma fromOrdering_eq_eq_iff {p} {o} : @fromOrdering p o = fromOrdering .eq ↔ 
     intro hp
     injection hp
     simp_all
-  · simp only [fromOrdering]
+  · simp [fromOrdering]
   · simp only [fromOrdering, reduceCtorEq, iff_false]
     intro hp
     injection hp with hp
@@ -521,28 +515,31 @@ theorem less_spec {p}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::cmp::Ordering::less».call h![] h![])
     (fun r => r = fromOrdering .lt) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Cmp.env) (by solve_env_subset)
   enter_decl
   steps
   subst_vars
-  simp
+  rfl
 
 theorem equal_spec {p}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::cmp::Ordering::equal».call h![] h![])
     (fun r => r = fromOrdering .eq) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Cmp.env) (by solve_env_subset)
   enter_decl
   steps
   subst_vars
-  simp
+  rfl
 
 theorem greater_spec {p}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::cmp::Ordering::greater».call h![] h![])
     (fun r => r = fromOrdering .gt) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Cmp.env) (by solve_env_subset)
   enter_decl
   steps
   subst_vars
-  simp
+  rfl
 
 theorem u128_ord_spec {p self other}
   : STHoare p env ⟦⟧

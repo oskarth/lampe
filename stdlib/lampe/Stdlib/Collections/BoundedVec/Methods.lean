@@ -1,5 +1,7 @@
 import Stdlib.Collections.BoundedVec.Core
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe
 
 theorem SLP.exists_mono [LawfulHeap α] {H H' : β → SLP α}
@@ -111,78 +113,73 @@ private theorem SLP.singleton_entails_exists_star_lift
   exact ⟨v, st, ∅, by simp, by simp, hst, h, rfl⟩
 
 private theorem get_unchecked_concrete_spec {p T MaxLen self index}
+    {selfRef : Ref (bvTp T MaxLen)}
     (hindex : index.toNat < MaxLen.toNat) :
-    STHoare p env ⟦⟧
+    STHoare p env [selfRef ↦ ⟨bvTp T MaxLen, self⟩]
       («std-1.0.0-beta.21::collections::bounded_vec::BoundedVec::get_unchecked».call h![T, MaxLen]
-        h![self, index])
-      (fun r => r = (storage self)[index.toNat]'hindex) := by
+        h![selfRef, index])
+      (fun (r : Tp.denote p T) => [selfRef ↦ ⟨bvTp T MaxLen, self⟩] ⋆
+        ⟦r = (storage self).get ⟨index.toNat, hindex⟩⟧) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Collections.BoundedVec.env) (by solve_env_subset)
   enter_decl
   steps
-  simpa [storage]
+  simp_all [storage]
+  rfl
 
 private theorem get_concrete_spec {p T MaxLen self index}
+    {selfRef : Ref (bvTp T MaxLen)}
     (hbounded : bounded self)
     (hindex : index.toNat < (len self).toNat) :
-    STHoare p env ⟦⟧
+    STHoare p env [selfRef ↦ ⟨bvTp T MaxLen, self⟩]
       («std-1.0.0-beta.21::collections::bounded_vec::BoundedVec::get».call h![T, MaxLen]
-        h![self, index])
-      (fun r => r = (storage self)[index.toNat]'(lt_of_lt_of_le hindex hbounded)) := by
+        h![selfRef, index])
+      (fun (r : Tp.denote p T) => [selfRef ↦ ⟨bvTp T MaxLen, self⟩] ⋆
+        ⟦r = (storage self).get ⟨index.toNat, lt_of_lt_of_le hindex hbounded⟩⟧) := by
   have hindex_max : index.toNat < MaxLen.toNat := lt_of_lt_of_le hindex hbounded
   enter_decl
-  steps [get_unchecked_concrete_spec (p := p) (T := T) (MaxLen := MaxLen) (self := self) (index := index) (hindex := hindex_max)]
+  steps [get_unchecked_concrete_spec (p := p) (T := T) (MaxLen := MaxLen)
+    (self := self) (index := index) (hindex := hindex_max)]
   assumption
 
 theorem get_unchecked_spec {p T MaxLen self index}
+    {selfRef : Ref (bvTp T MaxLen)}
     (hindex : index.toNat < MaxLen.toNat) :
-    STHoare p env ⟦⟧
+    STHoare p env [selfRef ↦ ⟨bvTp T MaxLen, self⟩]
       («std-1.0.0-beta.21::collections::bounded_vec::BoundedVec::get_unchecked».call h![T, MaxLen]
-        h![self, index])
-      (fun r => ∀ h : index.toNat < (embed self).length, r = (embed self)[index.toNat]'h) := by
+        h![selfRef, index])
+      (fun (r : Tp.denote p T) => [selfRef ↦ ⟨bvTp T MaxLen, self⟩] ⋆
+        ⟦∀ h : index.toNat < (embed self).length, r = (embed self).get ⟨index.toNat, h⟩⟧) := by
+  apply STHoare.consequence_post (get_unchecked_concrete_spec (self := self) hindex)
+  intro r
+  apply SLP.star_mono_l
+  apply SLP.lift_mono
+  intro hr hlt
   have hstorage : index.toNat < (storage self).toList.length := by
     simpa [storage, List.Vector.toList_length] using hindex
-  exact STHoare.consequence_post
-    (get_unchecked_concrete_spec (p := p) (T := T) (MaxLen := MaxLen)
-      (self := self) (index := index) (hindex := hindex))
-    fun r st ⟨hr, hst⟩ => ⟨fun hlt => by
-      have hr_list : r = (storage self).toList[index.toNat]'hstorage := by
-        simpa [List.Vector.getElem_def] using hr
-      have hx_rhs :
-          (embed self)[index.toNat]'hlt = (storage self).toList[index.toNat]'hstorage := by
-        simpa using
-          (embed_getElem_toList (self := self) (i := index.toNat) (hxs := hlt) (hstorage := hstorage))
-      exact hr_list.trans hx_rhs.symm, hst⟩
+  have hx := embed_getElem_toList (self := self) (i := index.toNat) (hxs := hlt) (hstorage := hstorage)
+  simpa [List.Vector.get_eq_get_toList] using hr.trans hx.symm
 
 theorem get_spec {p T MaxLen self index}
+    {selfRef : Ref (bvTp T MaxLen)}
     (hwf : wellFormed self)
     (hindex : index.toNat < (embed self).length) :
-    STHoare p env ⟦⟧
+    STHoare p env [selfRef ↦ ⟨bvTp T MaxLen, self⟩]
       («std-1.0.0-beta.21::collections::bounded_vec::BoundedVec::get».call h![T, MaxLen]
-        h![self, index])
-      (fun r => r = (embed self)[index.toNat]'hindex) := by
+        h![selfRef, index])
+      (fun (r : Tp.denote p T) => [selfRef ↦ ⟨bvTp T MaxLen, self⟩] ⋆
+        ⟦r = (embed self).get ⟨index.toNat, hindex⟩⟧) := by
   have hb : bounded self := bounded_of_wellFormed hwf
   have hlen : (embed self).length = (len self).toNat := hwf
-  have hindex_len : index.toNat < (len self).toNat := by
-    simpa [hlen] using hindex
-  have hindex_max : index.toNat < MaxLen.toNat := lt_of_lt_of_le hindex_len hb
+  have hi : index.toNat < (len self).toNat := by simpa [hlen] using hindex
+  apply STHoare.consequence_post (get_concrete_spec (self := self) hb hi)
+  intro r
+  apply SLP.star_mono_l
+  apply SLP.lift_mono
+  intro hr
   have hstorage : index.toNat < (storage self).toList.length := by
-    simpa [storage, List.Vector.toList_length] using hindex_max
-  have hx_rhs :
-      (embed self)[index.toNat]'hindex = (storage self).toList[index.toNat]'hstorage := by
-    simpa using (embed_getElem_toList (self := self) (i := index.toNat) (hxs := hindex) (hstorage := hstorage))
-  have hprec :
-      STHoare p env ⟦⟧
-        («std-1.0.0-beta.21::collections::bounded_vec::BoundedVec::get».call h![T, MaxLen]
-          h![self, index])
-        (fun r => r = (storage self)[index.toNat]'hindex_max) := by
-    simpa using
-      (get_concrete_spec (p := p) (T := T) (MaxLen := MaxLen) (self := self) (index := index)
-        (hbounded := hb) (hindex := hindex_len))
-
-  exact STHoare.consequence_post hprec fun r st ⟨hr, hst⟩ =>
-    ⟨by
-      have hr_list : r = (storage self).toList[index.toNat]'hstorage := by
-        simpa [List.Vector.getElem_def] using hr
-      exact hr_list.trans hx_rhs.symm, hst⟩
+    simpa [storage, List.Vector.toList_length] using lt_of_lt_of_le hi hb
+  have hx := embed_getElem_toList (self := self) (i := index.toNat) (hxs := hindex) (hstorage := hstorage)
+  simpa [List.Vector.get_eq_get_toList] using hr.trans hx.symm
 
 private theorem set_unchecked_concrete_spec {p T MaxLen selfRef self index value}
     (hindex : index.toNat < MaxLen.toNat) :

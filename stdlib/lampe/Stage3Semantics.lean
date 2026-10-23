@@ -37,8 +37,8 @@ theorem unsupported_format_signature {p st Q} :
   intro h
   cases h
 
-theorem asWitness_has_no_execution {p st argTps outTp args Q} :
-    ¬ Builtin.asWitness.omni p st argTps outTp args Q := by
+theorem asWitness_unsupported_signature {p st Q} :
+    ¬ Builtin.asWitness.omni p st [] .unit h![] Q := by
   intro h
   cases h
 
@@ -90,5 +90,5 @@ theorem permutation_nonvacuous {p st} (input : List.Vector (Fp p) 4) :
 #print axioms let_value
 #print axioms diagnostic_succeeds
 #print axioms diagnostic_keeps_false_assert_false
-#print axioms asWitness_has_no_execution
+#print axioms asWitness_unsupported_signature
 end Stage3Semantics

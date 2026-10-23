@@ -132,9 +132,20 @@ def iAsField := newGenericTotalPureBuiltin
 Represents the builtin that returns the bit representation of the modulus of a field in
 little-endian format.
 -/
-def modulusLeBits : Builtin := newTotalPureBuiltin
-  ⟨[], (.vector (.u 1))⟩
-  (fun {p} h![] => (RadixVec.toDigitsLE' 2 p.natVal).map BitVec.ofFin)
+-- Retain the legacy u1 signature and add beta.21's Boolean signature.
+-- Pinned source: https://github.com/noir-lang/noir/blob/89a0f0faf3a5f1273c8ac4843b7877882437e277/noir_stdlib/src/field/mod.nr#L281-L282
+-- Both views encode the same little-endian digits. Neither changes the heap.
+def modulusLeBitsSgn (boolean : Bool) : List Tp × Tp :=
+  ([], .vector (if boolean then .bool else .u 1))
+
+def modulusLeBitsDesc {p : Prime} (boolean : Bool)
+    (_ : HList (Tp.denote p) (modulusLeBitsSgn boolean).fst) :
+    Tp.denote p (modulusLeBitsSgn boolean).snd :=
+  match boolean with
+  | false => (RadixVec.toDigitsLE' 2 p.natVal).map BitVec.ofFin
+  | true => (RadixVec.toDigitsLE' 2 p.natVal).map (fun bit => bit.val == 1)
+
+def modulusLeBits : Builtin := newGenericTotalPureBuiltin modulusLeBitsSgn modulusLeBitsDesc
 
 /--
 Represents the builtin that returns the bit representation of the modulus of a field in
@@ -173,10 +184,27 @@ Represents the builtin that converts a field element to its bit representation i
 
 Fails if `f ≥ 2^s`.
 -/
-def toLeBits : Builtin := newGenericBuiltin
-  (fun s => ([.field], .array (.u 1) s))
-  fun _ h![f] output =>
-    f = RadixVec.ofDigitsLE (r := 2) (output.map BitVec.toFin)
+inductive ToLeBitsSignature where
+  | legacy (n : U 32)
+  | bool32
+
+def toLeBitsSgn : ToLeBitsSignature → List Tp × Tp
+  | .legacy n => ([.field], .array (.u 1) n)
+  | .bool32 => ([.field], .array .bool 32)
+
+-- The deposit's pow_32 uses exactly [bool; 32]. Other Boolean lengths remain
+-- unsupported. Preserve the old u1 family for existing Hoare specifications.
+-- Pinned declaration: https://github.com/noir-lang/noir/blob/89a0f0faf3a5f1273c8ac4843b7877882437e277/noir_stdlib/src/field/mod.nr#L258-L259
+-- This relation encodes little-endian reconstruction, as the legacy model did.
+-- The wrapper checks the decomposition against the modulus. No ACIR claim.
+def toLeBitsDesc {p : Prime} : (sgn : ToLeBitsSignature) →
+    HList (Tp.denote p) (toLeBitsSgn sgn).fst → Tp.denote p (toLeBitsSgn sgn).snd → Prop
+  | .legacy _, h![f], output =>
+      f = RadixVec.ofDigitsLE (r := 2) (output.map BitVec.toFin)
+  | .bool32, h![f], output =>
+      f = RadixVec.ofDigitsLE (r := 2) (output.map (fun bit => if bit then (1 : Fin 2) else 0))
+
+def toLeBits : Builtin := newGenericBuiltin toLeBitsSgn toLeBitsDesc
 
 /--
 Represents the builtin that converts a field element to its bit representation in big-endian format.

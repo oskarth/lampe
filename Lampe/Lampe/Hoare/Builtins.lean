@@ -593,7 +593,7 @@ theorem toLeBits_intro {f : Tp.denote p Tp.field} :
     fun output => f = RadixVec.ofDigitsLE (r := 2) (output.map BitVec.toFin) := by
   apply STHoare.consequence
   case h_hoare =>
-    apply genericBuiltin_intro (sgn := fun s => ([.field], .array (.u 1) s))
+    apply genericBuiltin_intro (sgn := Builtin.toLeBitsSgn) (a := .legacy N)
   · apply SLP.entails_self
   · intro
     apply SLP.entails_self
