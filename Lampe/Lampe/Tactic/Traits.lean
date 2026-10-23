@@ -129,6 +129,15 @@ lemma resolvable_of_resolution {ref impl} (hp : TraitResolution Γ ref impl): Tr
   cases hp
   apply TraitResolvable.ok <;> assumption
 
+-- Dependent HList matchers can get stuck on metavariables in Lean 4.33.
+-- Normalize with local parameters, then restore the unknown generic values.
+private def normalizeTraitApplication (e : Lean.Expr) : MetaM Lean.Expr := do
+  let abstracted ← abstractMVars e (levels := false)
+  lambdaTelescope abstracted.expr fun params body => do
+    let body ← withTransparency .all $ whnf body
+    let normalized ← mkLambdaFVars params body
+    return normalized.beta abstracted.mvars
+
 mutual
 
 partial def proveConstraint (goal : MVarId): TacticM Unit := do
@@ -173,18 +182,18 @@ partial def matchTraitSignature (resolutionGoal : ResolutionGoal) (traitDef : Le
     unless ← isDefEq (← inferType implGenerics) implGenericsType do
       return none
 
-    let traitGenerics := defTraitGenerics.app implGenerics
+    let traitGenerics ← normalizeTraitApplication (defTraitGenerics.app implGenerics)
 
     if !(←withTransparency .all $ isDefEq traitGenerics resolutionGoal.generics) then
       trace[Lampe.Traits] "Trait generics do not match, skipping"
       return none
 
-    let self := defSelf.app implGenerics
+    let self ← normalizeTraitApplication (defSelf.app implGenerics)
     if !(←withTransparency .all $ isDefEq self resolutionGoal.self) then
       trace[Lampe.Traits] "Trait self ({←ppExpr self}) does not match the goal, skipping"
       return none
 
-    let constraints := defConstraints.app implGenerics
+    let constraints ← normalizeTraitApplication (defConstraints.app implGenerics)
     let some constraintsProof ← withTraceNode `Lampe.Traits (fun e => return f!"solveConstraints {e.toTraceResult.toEmoji}") $
         proveConstraints resolutionGoal.env constraints
       | trace[Lampe.Traits] "Trait signature matched, but couldn't resolve constraints"

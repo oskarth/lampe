@@ -3,6 +3,8 @@ import Lampe
 import Stdlib.List
 import Stdlib.TraitMethods
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Stdlib.Vector
 open «std-1.0.0-beta.21»
 
@@ -15,6 +17,7 @@ theorem append_spec {p T a b}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::vector::append».call h![T] h![a, b])
     (fun r => r = a ++ b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Vector.env) (by solve_env_subset)
   enter_decl
   steps
   step_as ([self ↦ ⟨T.vector, a⟩]) (fun _ => [self ↦ ⟨T.vector, a ++ b⟩])
@@ -35,6 +38,7 @@ theorem as_array_spec {p T N input}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::vector::as_array».call h![T, N] h![input])
     (fun r => r.toList = input) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Vector.env) (by solve_env_subset)
   enter_decl
   steps
   loop_inv nat fun i hlo hhi => ∃∃v, [array ↦ ⟨T.array N, v⟩] ⋆ (v.toList.take i = input.take i)

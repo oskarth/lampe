@@ -20,6 +20,8 @@ This file proves `aes128_encrypt<N>` evaluates to
 `Lampe.Crypto.Aes128.aes128CbcEncryptPkcs7 key iv input`.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Stdlib.Aes128
 
 open «std-1.0.0-beta.21»

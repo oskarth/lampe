@@ -25,6 +25,7 @@ theorem bool_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] .bool h![] h![] h![a])
     (fun r => r = !a) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -34,6 +35,7 @@ theorem u128_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.u 128) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -43,6 +45,7 @@ theorem u64_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.u 64) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -52,6 +55,7 @@ theorem u32_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.u 32) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -61,6 +65,7 @@ theorem u16_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.u 16) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -70,15 +75,7 @@ theorem u8_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.u 8) h![] h![] h![a])
     (fun r => r = a.not) := by
-  resolve_trait
-  steps
-  reduce_fn_body at *
-  simp_all
-
-theorem u1_not_spec {p a}
-  : STHoare p env ⟦⟧
-    (not h![] (.u 1) h![] h![] h![a])
-    (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -88,6 +85,7 @@ theorem i8_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.i 8) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -97,6 +95,7 @@ theorem i16_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.i 16) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -106,6 +105,7 @@ theorem i32_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.i 32) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -115,6 +115,7 @@ theorem i64_not_spec {p a}
   : STHoare p env ⟦⟧
     (not h![] (.i 64) h![] h![] h![a])
     (fun r => r = a.not) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -137,6 +138,7 @@ theorem bool_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] .bool h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -147,6 +149,7 @@ theorem u128_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.u 128) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -156,6 +159,7 @@ theorem u64_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.u 64) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -165,6 +169,7 @@ theorem u32_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.u 32) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -174,6 +179,7 @@ theorem u16_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.u 16) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -183,15 +189,7 @@ theorem u8_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.u 8) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
-  resolve_trait
-  steps
-  reduce_fn_body at *
-  simp_all
-
-theorem u1_bit_or_spec {p a b}
-  : STHoare p env ⟦⟧
-    (bitOr h![] (.u 1) h![] h![] h![a, b])
-    (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -201,6 +199,7 @@ theorem i8_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.i 8) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -210,6 +209,7 @@ theorem i16_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.i 16) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -219,6 +219,7 @@ theorem i32_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.i 32) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -228,6 +229,7 @@ theorem i64_bit_or_spec {p a b}
   : STHoare p env ⟦⟧
     (bitOr h![] (.i 64) h![] h![] h![a, b])
     (fun r => r = a.or b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -250,6 +252,7 @@ theorem bool_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] .bool h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -260,6 +263,7 @@ theorem u128_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.u 128) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -269,6 +273,7 @@ theorem u64_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.u 64) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -278,6 +283,7 @@ theorem u32_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.u 32) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -287,6 +293,7 @@ theorem u16_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.u 16) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -296,15 +303,7 @@ theorem u8_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.u 8) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
-  resolve_trait
-  steps
-  reduce_fn_body at *
-  simp_all
-
-theorem u1_bit_and_spec {p a b}
-  : STHoare p env ⟦⟧
-    (bitAnd h![] (.u 1) h![] h![] h![a, b])
-    (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -314,6 +313,7 @@ theorem i8_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.i 8) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -323,6 +323,7 @@ theorem i16_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.i 16) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -332,6 +333,7 @@ theorem i32_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.i 32) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -341,6 +343,7 @@ theorem i64_bit_and_spec {p a b}
   : STHoare p env ⟦⟧
     (bitAnd h![] (.i 64) h![] h![] h![a, b])
     (fun r => r = a.and b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -363,6 +366,7 @@ theorem bool_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] .bool h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -373,6 +377,7 @@ theorem u128_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.u 128) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -382,6 +387,7 @@ theorem u64_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.u 64) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -391,6 +397,7 @@ theorem u32_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.u 32) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -400,6 +407,7 @@ theorem u16_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.u 16) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -409,15 +417,7 @@ theorem u8_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.u 8) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
-  resolve_trait
-  steps
-  reduce_fn_body at *
-  simp_all
-
-theorem u1_bit_xor_spec {p a b}
-  : STHoare p env ⟦⟧
-    (bitXor h![] (.u 1) h![] h![] h![a, b])
-    (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -427,6 +427,7 @@ theorem i8_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.i 8) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -436,6 +437,7 @@ theorem i16_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.i 16) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -445,6 +447,7 @@ theorem i32_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.i 32) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -454,6 +457,7 @@ theorem i64_bit_xor_spec {p a b}
   : STHoare p env ⟦⟧
     (bitXor h![] (.i 64) h![] h![] h![a, b])
     (fun r => r = a.xor b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -476,6 +480,7 @@ theorem u128_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.u 128) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -485,6 +490,7 @@ theorem u64_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.u 64) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -494,6 +500,7 @@ theorem u32_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.u 32) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -503,6 +510,7 @@ theorem u16_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.u 16) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -512,15 +520,7 @@ theorem u8_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.u 8) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
-  resolve_trait
-  steps
-  reduce_fn_body at *
-  simp_all
-
-theorem u1_shl_spec {p a b}
-  : STHoare p env ⟦⟧
-    (shl h![] (.u 1) h![] h![] h![a, b])
-    (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -530,37 +530,45 @@ theorem i8_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.i 8) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 theorem i16_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.i 16) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 theorem i32_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.i 32) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 theorem i64_shl_spec {p a b}
   : STHoare p env ⟦⟧
     (shl h![] (.i 64) h![] h![] h![a, b])
     (fun r => r = a <<< b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 /-- A shorthand for a call to the `std::ops::bit::Shr::shr` method. -/
 @[reducible]
@@ -579,6 +587,7 @@ theorem u128_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.u 128) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -588,6 +597,7 @@ theorem u64_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.u 64) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -597,6 +607,7 @@ theorem u32_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.u 32) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -606,6 +617,7 @@ theorem u16_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.u 16) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -615,15 +627,7 @@ theorem u8_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.u 8) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
-  resolve_trait
-  steps
-  reduce_fn_body at *
-  simp_all
-
-theorem u1_shr_spec {p a b}
-  : STHoare p env ⟦⟧
-    (shr h![] (.u 1) h![] h![] h![a, b])
-    (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
@@ -633,34 +637,42 @@ theorem i8_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.i 8) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 theorem i16_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.i 16) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 theorem i32_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.i 32) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl
 
 theorem i64_shr_spec {p a b}
   : STHoare p env ⟦⟧
     (shr h![] (.i 64) h![] h![] h![a, b])
     (fun r => r = a >>> b) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Ops.Bit.env) (by solve_env_subset)
   resolve_trait
   steps
   reduce_fn_body at *
   simp_all
+  rfl

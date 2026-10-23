@@ -1,5 +1,6 @@
 import Lampe.Ast.Extensions
 import Lampe.Hoare.Builtins
+import Lampe.Builtin.Crypto.Poseidon2
 import Lampe.Hoare.SepTotal
 import Lampe.SeparationLogic.State
 import Lampe.Tactic.EnvSubsetSolver
@@ -145,6 +146,8 @@ def getClosingTerm (val : Lean.Expr) : TacticM (Option (TSyntax `term)) := withT
         | ``Lampe.Builtin.modulusBeBytes => return some (←``(genericTotalPureBuiltin_intro Builtin.modulusBeBytes (a := ()) rfl))
         | ``Lampe.Builtin.modulusNumBits => return some (←``(genericTotalPureBuiltin_intro Builtin.modulusNumBits (a := ()) rfl))
 
+        | ``Lampe.Builtin.mkFormatString => return some (←``(genericTotalPureBuiltin_intro Builtin.mkFormatString (a := ()) rfl))
+        | ``Lampe.Builtin.poseidon2ConfigStateSize => return some (←``(genericTotalPureBuiltin_intro Builtin.poseidon2ConfigStateSize (a := ()) rfl))
         | ``Lampe.Builtin.strAsBytes => return some (←``(strAsBytes_intro))
         | ``Lampe.Builtin.arrayAsStrUnchecked => return some (←``(arrayAsStrUnchecked_intro))
 

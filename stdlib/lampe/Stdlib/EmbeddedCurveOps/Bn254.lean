@@ -12,7 +12,7 @@ leave to the caller.
 In particular this provides `fixed_base_scalar_mul_bn254_spec`: a
 hypothesis-free version of `fixed_base_scalar_mul_spec`, where the
 generator-encodes-to-`bn254GeneratorPoint` side condition has been
-discharged via `native_decide` on the concrete prime.
+discharged by kernel-checked modular arithmetic on the concrete prime.
 -/
 
 namespace Lampe.Stdlib.EmbeddedCurveOps.Bn254
@@ -22,7 +22,7 @@ open Lampe Lampe.Crypto Lampe.Stdlib.Field.Bn254 Lampe.Crypto.EmbeddedCurve
 private theorem bn254_generator_nonsingular :
     (affineCurve Bn254.prime).Nonsingular 1
       (17631683881184975370165255887551781615748388533673675138860 : Fp Bn254.prime) := by
-  native_decide
+  decide
 
 /-- The Grumpkin generator as a Mathlib `WeierstrassCurve.Affine.Point`
 over the BN254 scalar field. -/

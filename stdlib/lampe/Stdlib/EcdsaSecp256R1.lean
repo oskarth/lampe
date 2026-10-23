@@ -5,17 +5,17 @@ namespace Lampe.Stdlib.EcdsaSecp256R1
 
 open «std-1.0.0-beta.21»
 
-private theorem ecdsaSecp256R1_builtin_spec {p}
+private theorem ecdsaSecp256R1_builtin_spec {p Γ}
     {pkX pkY : Tp.denote p ((Tp.u 8).array (32 : U 32))}
     {sig : Tp.denote p ((Tp.u 8).array (64 : U 32))}
     {msg : Tp.denote p ((Tp.u 8).array (32 : U 32))} :
-    STHoare p env ⟦⟧
+    STHoare p Γ ⟦⟧
       (.callBuiltin
         [(Tp.u 8).array (32 : U 32), (Tp.u 8).array (32 : U 32),
          (Tp.u 8).array (64 : U 32), (Tp.u 8).array (32 : U 32), .bool]
         .bool Builtin.ecdsaSecp256R1 h![pkX, pkY, sig, msg, true])
       (fun r => r = Lampe.Crypto.Ecdsa.secp256r1Verify pkX pkY sig msg) := by
-  exact STHoare.genericTotalPureBuiltin_intro Builtin.ecdsaSecp256R1 rfl () p env
+  exact STHoare.genericTotalPureBuiltin_intro Builtin.ecdsaSecp256R1 rfl () p Γ
     h![pkX, pkY, sig, msg, true]
 
 /-- Spec for `ecdsa_secp256r1::verify_signature`: returns the opaque
@@ -30,6 +30,7 @@ theorem verify_signature_spec {p}
       («std-1.0.0-beta.21::ecdsa_secp256r1::verify_signature».call
         h![] h![pkX, pkY, sig, msg])
       (fun r => r = Lampe.Crypto.Ecdsa.secp256r1Verify pkX pkY sig msg) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».EcdsaSecp256R1.env) (by solve_env_subset)
   enter_decl
   steps [ecdsaSecp256R1_builtin_spec]
   assumption

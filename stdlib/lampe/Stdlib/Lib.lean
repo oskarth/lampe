@@ -15,14 +15,17 @@ theorem println_spec {p T a}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::println».call h![T] h![a])
     (fun r => r = ()) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Lib.env) (by solve_env_subset)
   enter_decl
   step_as (⟦⟧) (fun r => r = ())
   steps
   step_as (⟦⟧) (fun r => (r : Tp.denote p .unit) = ())
   · enter_decl
     steps
+    all_goals rfl
   · steps
     simp_all
+    all_goals rfl
 
 set_option maxHeartbeats 800000 in
 /--
@@ -34,14 +37,17 @@ theorem print_spec {p T a}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::print».call h![T] h![a])
     (fun r => r = ()) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Lib.env) (by solve_env_subset)
   enter_decl
   step_as (⟦⟧) (fun r => r = ())
   steps
   step_as (⟦⟧) (fun r => (r : Tp.denote p .unit) = ())
   · enter_decl
     steps
+    all_goals rfl
   · steps
     simp_all
+    all_goals rfl
 
 -- TODO (#108) verify_proof_with_type
 

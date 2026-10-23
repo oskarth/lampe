@@ -13,6 +13,7 @@ theorem panic_correct {p T U msg}
   : STHoare p env ⟦⟧
     («std-1.0.0-beta.21::panic::panic».call h![T, U] h![msg])
     (fun _ => ⟦⟧) := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».Panic.env) (by solve_env_subset)
   enter_decl
   steps
 

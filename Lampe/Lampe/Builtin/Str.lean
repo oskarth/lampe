@@ -38,4 +38,13 @@ def arrayAsStrUnchecked := newGenericTotalPureBuiltin
   (fun n => ⟨[(Tp.u 8).array n], (.str n)⟩)
   (fun _ h![a] => arrayAsStr! a)
 
+/-- Diagnostic erasure for beta.21's Poseidon2 static assertion.
+The extracted template has 121 bytes; its format-string type has length 115.
+Only the reached two-u32 signature is supported. The result does not render text.
+`staticAssert` ignores its diagnostic argument, so erasure preserves that check.
+-/
+def mkFormatString := newTotalPureBuiltin
+  ([.str 121, .u 32, .u 32], .fmtStr 115 (.tuple none [.u 32, .u 32]))
+  (fun _ => "")
+
 end Lampe.Builtin

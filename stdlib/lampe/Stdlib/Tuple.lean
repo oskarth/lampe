@@ -1,6 +1,8 @@
 import Lampe
 import Stdlib.Tp
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Stdlib.Tuple
 
 set_option Lampe.pp.Expr false

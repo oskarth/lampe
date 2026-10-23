@@ -1,6 +1,8 @@
 import «std-1.0.0-beta.21».Extracted
 import Lampe
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lampe.Stdlib.Collections.BoundedVec
 
 open «std-1.0.0-beta.21»
@@ -80,7 +82,8 @@ lemma bounded_iff_embed_length_eq_len_toNat {p T MaxLen} (v : Repr p T MaxLen) :
       exact (embed_length_eq_min_len_toNat (v := v)).symm.trans hlen
     have : Nat.min (len v).toNat MaxLen.toNat ≤ MaxLen.toNat :=
       Nat.min_le_right (len v).toNat MaxLen.toNat
-    simpa [hmin] using this
+    change (len v).toNat ≤ MaxLen.toNat
+    simpa only [hmin] using this
 
 lemma bounded_iff_wellFormed {p T MaxLen} (v : Repr p T MaxLen) :
     bounded v ↔ wellFormed v := by
@@ -120,15 +123,15 @@ lemma storage_get_modify_lenLens {p T MaxLen} (v : Repr p T MaxLen) (n : U 32)
     (h : ((lenLens (p := p) (T := T) (MaxLen := MaxLen)).modify v n).isSome = true) :
     storage (((lenLens (p := p) (T := T) (MaxLen := MaxLen)).modify v n).get h) = storage v := by
   simp [storage, Lens.modify, Lens.get, Access.modify, Option.get_some]
-  cases v
-  rfl
 
 /-- Updating `len` with `lenLens` preserves the concrete `bounded` fact when the new `len` fits. -/
 lemma bounded_get_modify_lenLens_of_toNat_le {p T MaxLen} (v : Repr p T MaxLen) (n : U 32)
     (h : ((lenLens (p := p) (T := T) (MaxLen := MaxLen)).modify v n).isSome = true)
     (hn : n.toNat ≤ MaxLen.toNat) :
     bounded (((lenLens (p := p) (T := T) (MaxLen := MaxLen)).modify v n).get h) := by
-  simpa [bounded, len_get_modify_lenLens (v := v) (n := n) (h := h)] using hn
+  change (len _).toNat ≤ MaxLen.toNat
+  rw [len_get_modify_lenLens]
+  exact hn
 
 /-- Updating `len` with `lenLens` yields a semantically well-formed representation when the new `len` fits. -/
 lemma wellFormed_get_modify_lenLens_of_toNat_le {p T MaxLen} (v : Repr p T MaxLen) (n : U 32)
@@ -317,7 +320,10 @@ lemma toNat_len_sub_one {p T MaxLen} {v : Repr p T MaxLen}
     (hnonzero : (0 : U 32) < len v) :
     (len v - 1).toNat = (len v).toNat - 1 := by
   have h1le : (1 : U 32) ≤ len v := by
-    rw [BitVec.le_def]; simpa [BitVec.lt_def] using hnonzero
+    rw [BitVec.le_def]
+    have := (BitVec.lt_def.mp hnonzero)
+    change 1 ≤ (len v).toNat
+    exact Nat.succ_le_of_lt this
   simpa using BitVec.toNat_sub_of_le h1le
 
 lemma embed_dropLast_eq_take_pred {p T MaxLen} {v : Repr p T MaxLen}
@@ -407,7 +413,7 @@ theorem List.take_set_extends {α : Type _} {l : List α} {prefix_ source : List
   calc
     (l.set (offset + i) (source[i]'h_src)).take (offset + (i + 1)) =
       l.take (offset + i) ++ [source[i]'h_src] := by
-      simpa using List.take_succ_set_eq_take_append l (offset + i) (source[i]'h_src) h_stor
+      simpa only [Nat.add_assoc] using List.take_succ_set_eq_take_append l (offset + i) (source[i]'h_src) h_stor
     _ = (prefix_ ++ source.take i) ++ [source[i]'h_src] := by rw [h_take]
     _ = prefix_ ++ (source.take i ++ [source[i]'h_src]) := by rw [List.append_assoc]
     _ = prefix_ ++ source.take (i + 1) := by

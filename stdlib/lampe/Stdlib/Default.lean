@@ -38,15 +38,6 @@ theorem field_default_spec {p}
   steps
   simp_all
 
-theorem u1_default_spec {p}
-  : STHoare p env ⟦⟧
-    (default h![] (.u 1) h![] h![] h![])
-    (fun r => r = 0) := by
-  resolve_trait
-  steps
-  subst_vars
-  rfl
-
 theorem u8_default_spec {p}
   : STHoare p env ⟦⟧
     (default h![] (.u 8) h![] h![] h![])

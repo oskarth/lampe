@@ -13,7 +13,8 @@ set_option linter.deprecated false in
 theorem as_bytes_vec_spec {p N self} :
     STHoare p env ⟦⟧
       («std-1.0.0-beta.21::string::as_bytes_vec».call h![N] h![self])
-      (fun r => r = self.toList) := by
+      (fun r => r = self.toList)  := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».String.env) (by solve_env_subset)
   enter_decl
   steps
   subst_vars
@@ -23,7 +24,8 @@ set_option maxRecDepth 1500 in
 theorem from_spec {p N a} :
     STHoare p env ⟦⟧
       («std-1.0.0-beta.21::convert::From».from h![(Tp.u 8).array N] (.str N) h![] h![] h![a])
-      (fun r => r = Lampe.Builtin.arrayAsStr! a) := by
+      (fun r => r = Lampe.Builtin.arrayAsStr! a)  := by
+  apply STHoare.is_mono (Γ₁ := «std-1.0.0-beta.21».String.env) (by solve_env_subset)
   resolve_trait
   steps
   simp_all
