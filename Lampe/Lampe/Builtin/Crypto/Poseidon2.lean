@@ -15,4 +15,9 @@ def poseidon2Permutation := newTotalPureBuiltin
   ⟨[.array .field (4 : U 32)], .array .field (4 : U 32)⟩
   (fun h![state] => Crypto.Poseidon2.noirPermutation4 state)
 
+/-- State width of the pinned Noir BN254 backend. -/
+def poseidon2ConfigStateSize := newTotalPureBuiltin
+  ⟨[], .u 32⟩
+  (fun _ => 4)
+
 end Lampe.Builtin

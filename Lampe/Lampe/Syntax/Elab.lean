@@ -16,7 +16,7 @@ elab d:noir_depr? "noir_def" decl:noir_fn_def : command => do
   let (name, decl) ← makeFnDecl decl
   let decl ← match (←parseDeprecatedMessage d) with
   | some msg => `(
-    @[deprecated $name $(Syntax.mkStrLit msg) (since := "")] 
+    @[deprecated $(Syntax.mkStrLit msg):str (since := "")]
     def $name : FunctionDecl := $decl)
   | none => `(def $name : FunctionDecl := $decl)
   Elab.Command.elabCommand decl
@@ -45,7 +45,7 @@ elab d:noir_depr? "noir_struct_def" defName:noir_ident defn:noir_type_def : comm
   let ident := makeStructDefIdent (←makeNoirIdent defName)
   let cmd ← match (←parseDeprecatedMessage d) with
   | some msg => `(
-    @[deprecated $ident $(Syntax.mkStrLit msg) (since := "")] 
+    @[deprecated $(Syntax.mkStrLit msg):str (since := "")]
     def $ident := $(←makeStructDef defName defn))
   | none => `(def $ident := $(←makeStructDef defName defn))
   Elab.Command.elabCommand cmd
