@@ -187,3 +187,5 @@ syntax "(" "*" noir_expr ":" noir_type ")" : noir_lval -- A dereferenced value.
 
 syntax "splice!(" term ")" : noir_expr -- Lean code in place of an expression.
 syntax "splice!(" term ")" : noir_type -- Lean code in place of a type.
+
+syntax "lampe_literal_data% " term : term

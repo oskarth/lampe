@@ -9,6 +9,15 @@ namespace Lampe
 
 open Lean Elab
 
+elab_rules : term
+| `(lampe_literal_data% $value) => do
+  let name ← Lean.mkAuxDeclName `literalData
+  let value ← Lean.Elab.Term.elabTermAndSynthesize value (some (← Lean.Meta.mkAppM ``List #[Lean.mkConst ``Int]))
+  let result ← Lean.Meta.mkAuxDefinitionFor (compile := false) name value
+  Lean.Meta.setInlineAttribute name .noinline
+  Lean.compileDecls #[name]
+  return result
+
 -- DSL: TERMS -------------------------------------------------------------------------------------
 
 /-- Elaborates a function definition written in the Noir eDSL. -/

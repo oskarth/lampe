@@ -90,6 +90,12 @@ def makeLambdaParam [MonadDSL m] (p : TSyntax `noir_lam_param) : m LambdaParam :
   pure ⟨pat, ty⟩
 | _ => throwUnsupportedSyntax
 
+private partial def fieldLiteral? [MonadUtil m] : TSyntax `noir_expr → m (Option (TSyntax `term))
+| `(noir_expr|($e:noir_expr)) => fieldLiteral? e
+| `(noir_expr|$n:num : Field) => return some (← `(($n : Int)))
+| `(noir_expr|-$n:num : Field) => return some (← `((-$n : Int)))
+| _ => pure none
+
 mutual
 
 /--
@@ -217,7 +223,15 @@ partial def makeExpr [MonadDSL m]
       k
 
 -- Builtin Calls
-| `(noir_expr|(#_ $name:ident returning $tp)( $args,* )) =>
+| `(noir_expr|(#_ $name:ident returning $tp)( $args,* )) => do
+  if name.getId == `mkArray then
+    if let `(noir_type|Array<Field, $n:num : u32>) := tp then
+      if n.getNat == args.getElems.size then
+        let values ← args.getElems.mapM fieldLiteral?
+        if values.all Option.isSome then
+          let values ← makeListLit (values.map Option.get!)
+          let values ← if args.getElems.size > 128 then ``(lampe_literal_data% $values) else pure values
+          return ← wrapInLet (← ``(Expr.literalArray Tp.field $n $values rfl)) binder k
   let emitBuiltin : m (TSyntax `term) := makeArgs args.getElems fun args => do
     let argVals ← makeHListLit args
     wrapInLet

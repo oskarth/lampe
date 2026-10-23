@@ -80,6 +80,7 @@ theorem index_replaced_arr {n : U 32} {idx : Fin n.toNat} {arr} :
 /--
 Defines the builtin array constructor.
 -/
+@[noinline]
 def mkArray := newGenericTotalPureBuiltin
   (fun (a : U 32 × Tp) => ⟨List.replicate a.1.toNat a.2, (.array a.2 a.1)⟩)
   (fun _ args => HList.toVec args (by rfl))

@@ -12,6 +12,23 @@ import Lampe.Builtin.Struct
 
 namespace Lampe
 
+namespace Expr
+
+@[noinline]
+def literalArgs {rep : Tp → Type} {out : Tp} (tp : Tp) (values : List Int)
+    (k : HList rep (List.replicate values.length tp) → Expr rep out) : Expr rep out :=
+  match values with
+  | [] => k .nil
+  | x :: xs => .letIn (.litNum tp x) fun v =>
+      literalArgs tp xs fun vs => k (.cons v vs)
+
+@[noinline]
+def literalArray {rep : Tp → Type} (tp : Tp) (n : U 32) (values : List Int)
+    (h : values.length = n.toNat) : Expr rep (.array tp n) :=
+  literalArgs tp values fun args => .callBuiltin _ (.array tp n) Builtin.mkArray (h ▸ args)
+
+end Expr
+
 /-- A utility function for creating a reference expression. -/
 @[reducible]
 def Expr.ref (val : rep tp) : Lampe.Expr rep tp.ref :=
