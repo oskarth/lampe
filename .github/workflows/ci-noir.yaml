@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: noir-lang/noir
-          ref: 74d6be658e1ad252f87943292ba09bdd4da80bd4
+          ref: 89a0f0faf3a5f1273c8ac4843b7877882437e277
           path: noir
       - name: Ensure Test Programs Up To Date
         working-directory: noir/test_programs

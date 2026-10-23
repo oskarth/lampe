@@ -737,7 +737,7 @@ pub struct Foo {}
 
 impl HasConst for Foo {
     let N: u32 = 5;
-    let M: i32 = -7;
+    let M: i32 = -7_i32;
 
     fn double_n() -> u32 {
         Self::N * 2

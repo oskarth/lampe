@@ -15,7 +15,7 @@ use itertools::Itertools;
 use nargo::workspace::Workspace;
 use noirc_errors::Location;
 use noirc_frontend::{
-    ast::{BinaryOpKind, FunctionKind, Ident, IntegerBitSize, UnaryOp},
+    ast::{BinaryOpKind, FunctionKind, Ident, UnaryOp},
     graph::CrateId,
     hir::{
         def_map::{LocalModuleId, ModuleData, ModuleDefId},
@@ -262,7 +262,7 @@ impl LeanGenerator<'_, '_, '_> {
             if let Some(dep_id) = g.node_weight(node_idx) {
                 matches!(
                     *dep_id,
-                    DependencyId::Struct(_) | DependencyId::Alias(_) | DependencyId::Trait(_)
+                    DependencyId::DataType(_) | DependencyId::Alias(_) | DependencyId::Trait(_)
                 )
             } else {
                 false
@@ -307,7 +307,7 @@ impl LeanGenerator<'_, '_, '_> {
                         let def_order = dep_weights
                             .clone()
                             .into_iter()
-                            .position(|item| *item == DependencyId::Struct(id));
+                            .position(|item| *item == DependencyId::DataType(id));
                         self.name_supply.reset();
                         let struct_def = self.generate_struct_def(id);
                         let name = quote_lean_keywords(&struct_def.name);
@@ -386,7 +386,7 @@ impl LeanGenerator<'_, '_, '_> {
                 .type_attributes(&id)
                 .iter()
                 .find_map(|attr| match &attr.kind {
-                    SecondaryAttributeKind::Deprecated(msg) => Some(msg.clone()),
+                    SecondaryAttributeKind::Deprecated(_, msg) => Some(msg.clone()),
                     _ => None,
                 }),
         );
@@ -403,7 +403,8 @@ impl LeanGenerator<'_, '_, '_> {
             .map(|g| self.generate_lean_type_pattern_from_resolved_generic(g))
             .collect_vec();
 
-        let fields = struct_data.get_fields_as_written().unwrap_or_default();
+        assert!(struct_data.is_struct(), "Enum types are not currently supported");
+        let fields = struct_data.get_fields_as_written().expect("Unresolved struct fields");
         let members = fields
             .into_iter()
             .map(|f| self.generate_lean_type_value(&f.typ, None))
@@ -444,7 +445,7 @@ impl LeanGenerator<'_, '_, '_> {
                 expr: TypeExpr::builtin(BuiltinTag::Field, &[]),
                 kind: Kind::Type,
             },
-            NoirType::Array(count, typ) => Type::array(
+            NoirType::Array(typ, count) => Type::array(
                 self.generate_lean_type_value(typ, bindings),
                 self.generate_lean_type_value(count, bindings),
             ),
@@ -548,9 +549,13 @@ impl LeanGenerator<'_, '_, '_> {
                     Type::immutable_reference(typ)
                 }
             }
-            NoirType::Constant(felt, kind) => {
-                let felt_value = felt.to_string();
-                let kind = self.expect_constant_numeric_kind(kind);
+            NoirType::Constant(integer) => {
+                let felt_value = integer.to_string();
+                let felt_value = felt_value.strip_prefix('-').map_or_else(
+                    || felt_value.clone(),
+                    |magnitude| format!("(0 - {magnitude})"),
+                );
+                let kind = self.expect_constant_numeric_kind(&integer.numeric_kind());
 
                 Type::numeric_const(&felt_value, kind)
             }
@@ -899,7 +904,6 @@ impl LeanGenerator<'_, '_, '_> {
                 Box::new(NoirType::Unit),
                 false,
             ),
-            NoirType::Integer(Signedness::Unsigned, IntegerBitSize::One),
             NoirType::Vector(Box::new(dummy_generic.clone())),
             NoirType::String(Box::new(dummy_generic.clone())),
             NoirType::Tuple(vec![dummy_generic; 0]),
@@ -1078,7 +1082,8 @@ impl LeanGenerator<'_, '_, '_> {
             self.context
                 .def_interner
                 .function_attributes(id)
-                .get_deprecated_note(),
+                .get_deprecated()
+                .map(|(_, note)| note),
         );
 
         let generics = self.gather_function_generic_patterns(function_meta);
@@ -1774,7 +1779,12 @@ impl LeanGenerator<'_, '_, '_> {
                 self.generate_ident_expression(id, &ident, &output_type)
             }
             HirExpression::Literal(literal) => {
-                self.generate_literal(&literal, &output_type, prologue)
+                self.generate_literal(
+                    &literal,
+                    &output_type,
+                    self.resolve_bound_type(id).is_signed(),
+                    prologue,
+                )
             }
             HirExpression::Prefix(prefix) => self.generate_prefix(&prefix, &output_type, prologue),
             HirExpression::Infix(infix) => self.generate_infix(&infix, &output_type, prologue),
@@ -2805,6 +2815,7 @@ impl LeanGenerator<'_, '_, '_> {
         &self,
         literal: &HirLiteral,
         output_type: &Type,
+        is_signed: bool,
         prologue: &mut Vec<Statement>,
     ) -> Expression {
         match literal {
@@ -2892,12 +2903,12 @@ impl LeanGenerator<'_, '_, '_> {
                 }
             },
             HirLiteral::Bool(bool) => Expression::Literal(Literal::Bool(*bool)),
-            HirLiteral::Integer(signed_field) => {
-                let value = format!(
-                    "{}{}",
-                    if signed_field.is_negative() { "-" } else { "" },
-                    signed_field.absolute_value()
-                );
+            HirLiteral::Integer(field) => {
+                let value = if is_signed {
+                    i128::try_from(*field).expect("Signed literal is outside i128").to_string()
+                } else {
+                    field.to_string()
+                };
 
                 let literal = NumericLiteral {
                     value,
@@ -2906,7 +2917,37 @@ impl LeanGenerator<'_, '_, '_> {
 
                 Expression::Literal(Literal::Numeric(literal))
             }
-            HirLiteral::Str(value) => Expression::Literal(Literal::String(value.clone())),
+            HirLiteral::Str(bytes) => {
+                let byte_type = Type::integer(8, false);
+                let array_type = Type::array(
+                    byte_type.clone(),
+                    Type::numeric_const(&bytes.len().to_string(), Kind::U(32)),
+                );
+                let array = Expression::Call(Call {
+                    function: Box::new(Expression::builtin_call_ref(
+                        MAKE_ARRAY_BUILTIN_NAME,
+                        &array_type,
+                    )),
+                    params: bytes
+                        .iter()
+                        .map(|byte| {
+                            Expression::Literal(Literal::Numeric(NumericLiteral {
+                                value: byte.to_string(),
+                                typ: byte_type.clone(),
+                            }))
+                        })
+                        .collect(),
+                    return_type: array_type,
+                });
+                Expression::Call(Call {
+                    function: Box::new(Expression::builtin_call_ref(
+                        "arrayAsStrUnchecked",
+                        output_type,
+                    )),
+                    params: vec![array],
+                    return_type: output_type.clone(),
+                })
+            }
             HirLiteral::FmtStr(parts, vars, _) => {
                 let template = Expression::Literal(Literal::String(
                     parts.iter().map(ToString::to_string).join("{}"),
@@ -3243,11 +3284,15 @@ impl LeanGenerator<'_, '_, '_> {
             HirStatement::Comptime(_) => {
                 panic!("Encountered comptime statement during compilation when none should exist")
             }
+            HirStatement::TraitAssociatedConstant => {
+                panic!("Trait-associated-constant placeholder reached statement emission")
+            }
             HirStatement::Error => panic!("Encountered error statement during compilation"),
         }
     }
 
     pub fn generate_for(&self, fors: &HirForStatement, out: &mut Vec<Statement>) {
+        assert!(!fors.inclusive, "Inclusive for loops are not currently supported");
         let loop_variable =
             sanitize_variable_name(self.context.def_interner.definition_name(fors.identifier.id));
 
