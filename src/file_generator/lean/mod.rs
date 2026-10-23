@@ -180,8 +180,10 @@ impl FileGenerator {
             .join("\n  ++ ");
 
         let dependency_env = self
-            .external_dependencies
+            .local_dependencies
             .iter()
+            .chain(self.external_dependencies.iter())
+            .unique()
             .sorted()
             .map(|extracted_module| {
                 format!(

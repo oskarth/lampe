@@ -8,7 +8,7 @@ use serde::Deserialize;
 
 use crate::{
     file_generator::{
-        lake::dependency::{LeanDependency, LeanDependencyGit},
+        lake::dependency::{LeanDependency, LeanDependencyPath},
         Error,
         NoirPackageIdentifier,
         LAMPE_GENERATED_COMMENT,
@@ -26,10 +26,8 @@ fn default_lean_dependencies(
     stdlib_info: Option<&NoirPackageIdentifier>,
 ) -> Vec<Box<dyn LeanDependency>> {
     let mut deps: Vec<Box<dyn LeanDependency>> = vec![Box::new(
-        LeanDependencyGit::builder("Lampe")
-            .git("https://github.com/reilabs/lampe")
-            .rev("main")
-            .subdir("Lampe")
+        LeanDependencyPath::builder("Lampe")
+            .path(concat!(env!("CARGO_MANIFEST_DIR"), "/Lampe"))
             .build(),
     )];
 
@@ -38,10 +36,8 @@ fn default_lean_dependencies(
     if let Some(info) = stdlib_info {
         let dep_name = format!("{}-{}", info.name, info.version);
         deps.push(Box::new(
-            LeanDependencyGit::builder(&dep_name)
-                .git("https://github.com/reilabs/lampe")
-                .rev("main")
-                .subdir("stdlib/lampe")
+            LeanDependencyPath::builder(&dep_name)
+                .path(concat!(env!("CARGO_MANIFEST_DIR"), "/stdlib/lampe"))
                 .build(),
         ));
     }
@@ -81,6 +77,8 @@ pub fn generate_lakefile_toml(
         noir_package_identifier.name, noir_package_identifier.version
     )?;
     result.push('\n');
+    result.push_str("moreLeanArgs = [\"--tstack=65536\", \"-M4096\"]\n\n");
+    result.push_str("[leanOptions]\nmaxRecDepth = 10000\nmaxHeartbeats = 4000000\n\n");
     result.push_str("[[lean_lib]]\n");
     writeln!(
         result,
